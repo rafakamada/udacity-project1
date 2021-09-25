@@ -18,17 +18,17 @@ CREATE TABLE songplays (
   artist_id VARCHAR,
   session_id INT,
   location VARCHAR,
-  user_agent VARCHAR
-  --FOREIGN KEY (start_time) REFERENCES time(start_time),
-  --FOREIGN KEY (user_id) REFERENCES users(id),
-  --FOREIGN KEY (song_id) REFERENCES songs(id),
-  --FOREIGN KEY (artist_id) REFERENCES artists(id)
+  user_agent VARCHAR,
+  FOREIGN KEY (start_time) REFERENCES time(start_time),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (song_id) REFERENCES songs(id),
+  FOREIGN KEY (artist_id) REFERENCES artists(id)
 )
 """)
 
 user_table_create = ("""
 CREATE TABLE users (
-  id  INT, --PRIMARY KEY,
+  id  INT PRIMARY KEY,
   first_name VARCHAR,
   last_name VARCHAR,
   gender VARCHAR,
@@ -38,18 +38,17 @@ CREATE TABLE users (
 
 song_table_create = ("""
 CREATE TABLE songs (
-  id VARCHAR, -- PRIMARY KEY,
+  id VARCHAR PRIMARY KEY,
   title VARCHAR,
   artist_id VARCHAR,
   year INT,
   duration FLOAT
-  --FOREIGN KEY (artist_id) REFERENCES artists(id)
 )
 """)
 
 artist_table_create = ("""
 CREATE TABLE artists (
-  id VARCHAR, -- PRIMARY KEY,
+  id VARCHAR PRIMARY KEY,
   name VARCHAR,
   location VARCHAR,
   latitude FLOAT,
@@ -59,7 +58,7 @@ CREATE TABLE artists (
 
 time_table_create = ("""
 CREATE TABLE time (
-  start_time VARCHAR, --PRIMARY KEY,
+  start_time TIMESTAMP PRIMARY KEY,
   hour INT,
   day INT,
   week INT,
@@ -80,18 +79,27 @@ user_table_insert = ("""
 INSERT INTO users
 (id, first_name, last_name, gender, level) 
 VALUES (%s, %s, %s, %s, %s)
+ON CONFLICT (id) DO
+UPDATE
+SET 
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  gender = EXCLUDED.gender,
+  level = EXCLUDED.level
 """)
 
 song_table_insert = ("""
 INSERT INTO songs
 (id, title, artist_id, year, duration)
 VALUES(%s, %s, %s, %s, %s)
+ON CONFLICT DO NOTHING
 """)
 
 artist_table_insert = ("""
 INSERT INTO artists
 (id, name, location, latitude, longitude)
 VALUES (%s, %s, %s, %s, %s)
+ON CONFLICT DO NOTHING
 """)
 
 
@@ -99,6 +107,7 @@ time_table_insert = ("""
 INSERT INTO time
 (start_time, hour, day, week, month, year, weekday)
 VALUES (%s, %s, %s, %s, %s, %s, %s)
+ON CONFLICT DO NOTHING
 """)
 
 # FIND SONGS
