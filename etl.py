@@ -7,6 +7,17 @@ import datetime
 
 
 def process_song_file(cur, filepath):
+    '''
+    Description: this function reads the JSON song file, processes it into a 
+    dataframe and load artists and songs data into their tables
+    
+    Arguments: 
+        cur: cursor connected to the database
+        filepath (string): the filepath where the JSON song file is in 
+    
+    Returns: 
+        None   
+    '''
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -20,6 +31,17 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    '''
+    Description: this function reads the JSON log file, processes it into a 
+    dataframe and load time, users, and songplays data into their tables
+    
+    Arguments: 
+        cur: cursor connected to the database
+        filepath (string): the filepath where the JSON log file is in 
+    
+    Returns: 
+        None   
+    '''
     # open log file
     df = pd.read_json(filepath, lines=True) 
 
@@ -73,6 +95,19 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    '''
+    Description: this function reads all files in the given directory and 
+    processes it using the process_song_file and the process_log_file
+    
+    Arguments: 
+        cur: cursor connected to the database
+        conn: connection to the database 
+        filepath (string): the directory where song or log files are in 
+        func (function): the function that loads the data into their tables
+    
+    Returns: 
+        None   
+    '''
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
